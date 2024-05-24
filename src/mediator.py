@@ -465,7 +465,6 @@ class Mediator:
                 possible_dst_stations = self.get_stations_for_shape_type(
                     passenger.destination_shape.type
                 )
-                # random.shuffle(possible_dst_stations)
                 should_set_null_path = True
                 shortest_node_path = []
                 for possible_dst_station in possible_dst_stations:
