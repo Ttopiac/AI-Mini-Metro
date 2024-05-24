@@ -8,11 +8,11 @@ AI-Mini-Metro is a project focused on creating AI agents to play a simplified 2D
 - **Low-Fidelity Graphics:** Simplified 2D graphics to focus on the core mechanics and AI performance.
 
 ## Installation
-### Clone the Repository and Install the Required Packages:**
    ```bash
    git clone https://github.com/Ttopiac/AI-Mini-Metro.git
    cd AI-Mini-Metro
    pip install -r requirements.txt
+   ```
 
 ## Credits
 This project includes code from [python_mini_metro](https://github.com/yanfengliu/python_mini_metro) by Yanfeng Liu, used under MIT License.
