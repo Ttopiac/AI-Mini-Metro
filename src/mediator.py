@@ -3,6 +3,7 @@ from __future__ import annotations
 import pprint
 import random
 from typing import Dict, List
+import numpy as np
 
 import pygame
 
@@ -16,6 +17,7 @@ from config import (
     passenger_spawning_start_step,
     score_display_coords,
     score_font_size,
+    seed,
 )
 from entity.get_entity import get_random_stations
 from entity.metro import Metro
@@ -43,6 +45,8 @@ pp = pprint.PrettyPrinter(indent=4)
 class Mediator:
     def __init__(self) -> None:
         pygame.font.init()
+        random.seed(seed)
+        np.random.seed(seed)
 
         # configs
         self.passenger_spawning_step = passenger_spawning_start_step
@@ -58,7 +62,7 @@ class Mediator:
         self.font = pygame.font.SysFont("arial", score_font_size)
 
         # entities
-        self.stations = get_random_stations(self.num_stations)
+        self.stations = get_random_stations(self.num_stations, seed)
         self.metros: List[Metro] = []
         self.paths: List[Path] = []
         self.passengers: List[Passenger] = []

@@ -55,3 +55,6 @@ path_button_cross_width = 5
 # text
 score_font_size = 50
 score_display_coords = (20, 20)
+
+# parameters control the randomizaiton
+seed = 627
