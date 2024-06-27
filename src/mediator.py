@@ -62,7 +62,7 @@ class Mediator:
         self.font = pygame.font.SysFont("arial", score_font_size)
 
         # entities
-        self.stations = get_random_stations(self.num_stations, seed)
+        self.stations = get_random_stations(self.num_stations)
         self.metros: List[Metro] = []
         self.paths: List[Path] = []
         self.passengers: List[Passenger] = []
