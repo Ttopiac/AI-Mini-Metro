@@ -9,7 +9,7 @@ screen_height = 1080
 screen_color = (255, 255, 255)
 
 # station
-num_stations = 10
+num_stations = 4
 station_size = 30
 station_capacity = 12
 station_color = (0, 0, 0)
@@ -37,7 +37,7 @@ metro_speed_per_ms = 150 / 1000  # pixels / ms
 metro_passengers_per_row = 3
 
 # path
-num_paths = 3
+num_paths = 1
 path_width = 10
 path_order_shift = 10
 
@@ -57,4 +57,4 @@ score_font_size = 50
 score_display_coords = (20, 20)
 
 # parameters control the randomizaiton
-seed = 627
+seed = 7

@@ -18,6 +18,7 @@ from config import (
     score_display_coords,
     score_font_size,
     seed,
+    station_shape_type_list,
 )
 from entity.get_entity import get_random_stations
 from entity.metro import Metro
@@ -476,6 +477,7 @@ class Mediator:
                     start = station_nodes_dict[station]
                     end = station_nodes_dict[possible_dst_station]
                     node_path = bfs(start, end)
+
                     if shortest_node_path == [] and len(node_path) > 0 :
                         shortest_node_path = node_path
                     elif len(shortest_node_path) > len(node_path) and len(node_path) > 0 :
@@ -496,3 +498,76 @@ class Mediator:
                     should_set_null_path = False
                 if should_set_null_path:
                     self.travel_plans[passenger] = TravelPlan([])
+
+    def calculate_cost_following_paths(self) -> None:
+        station_nodes_dict = build_station_nodes_dict(self.stations, self.paths)
+        stations_cost = 0
+        for station in self.stations:
+            print(station)
+            print(station.shape.type)
+            type_list = station_shape_type_list.copy()
+            type_list.remove(station.shape.type)
+            print(type_list)
+            station_cost = 0
+            for type in type_list:
+                possible_dst_stations = self.get_stations_for_shape_type(type)
+                shortest_node_path = []
+                for possible_dst_station in possible_dst_stations:
+                    start = station_nodes_dict[station]
+                    end = station_nodes_dict[possible_dst_station]
+                    node_path = bfs(start, end)
+                    if shortest_node_path == [] and len(node_path) > 0 :
+                        shortest_node_path = node_path
+                    elif len(shortest_node_path) > len(node_path) and len(node_path) > 0 :
+                        shortest_node_path = node_path
+                if shortest_node_path == []:
+                    station_cost = float('inf')
+                    break
+                else:
+                    station_cost += (len(shortest_node_path)-1)
+
+                print("destination type: ", type)
+                print("shortest node path: ", shortest_node_path)
+            print("station_cost: ", station_cost)
+            stations_cost += station_cost
+            print("=============")
+        print("stations_cost: ", stations_cost)
+        for path in self.paths:
+            print("path: ", path.stations)
+            
+
+
+        # station_nodes_dict = build_station_nodes_dict(self.stations, self.paths)
+        # for station in self.stations:
+        #     for passenger in station.passengers:
+        #         possible_dst_stations = self.get_stations_for_shape_type(
+        #             passenger.destination_shape.type
+        #         )
+        #         # random.shuffle(possible_dst_stations)
+        #         should_set_null_path = True
+        #         shortest_node_path = []
+        #         for possible_dst_station in possible_dst_stations:
+        #             start = station_nodes_dict[station]
+        #             end = station_nodes_dict[possible_dst_station]
+        #             node_path = bfs(start, end)
+
+        #             if shortest_node_path == [] and len(node_path) > 0 :
+        #                 shortest_node_path = node_path
+        #             elif len(shortest_node_path) > len(node_path) and len(node_path) > 0 :
+        #                 shortest_node_path = node_path
+        #         if len(shortest_node_path) == 1:
+        #             # passenger arrived at destination
+        #             station.remove_passenger(passenger)
+        #             self.passengers.remove(passenger)
+        #             passenger.is_at_destination = True
+        #             del self.travel_plans[passenger]
+        #             should_set_null_path = False
+        #         elif len(shortest_node_path) > 1:
+        #             shortest_node_path = self.skip_stations_on_same_path(shortest_node_path)
+        #             self.travel_plans[passenger] = TravelPlan(shortest_node_path[1:])
+        #             self.find_next_path_for_passenger_at_station(
+        #                 passenger, station
+        #             )
+        #             should_set_null_path = False
+        #         if should_set_null_path:
+        #             self.travel_plans[passenger] = TravelPlan([])
