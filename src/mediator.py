@@ -482,7 +482,7 @@ class Mediator:
                     passenger.is_at_destination = True
                     del self.travel_plans[passenger]
                     should_set_null_path = False
-                elif len(shortest_node_path) > 1:
+                elif len(shortest_node_path) >= 2:
                     shortest_node_path = self.skip_stations_on_same_path(shortest_node_path)
                     self.travel_plans[passenger] = TravelPlan(shortest_node_path[1:])
                     self.find_next_path_for_passenger_at_station(
