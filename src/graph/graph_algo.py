@@ -17,11 +17,21 @@ def build_station_nodes_dict(stations: List[Station], paths: List[Path]):
     for path in paths:
         if path.is_being_created:
             continue
+        # "connection" repreesnts relation of directed connection. [a,b,c] means a->b->c, but not c->b->a
         connection = []
         for station in path.stations:
             station_nodes_dict[station].paths.add(path)
             connection.append(station_nodes_dict[station])
-        connections.append(connection)
+        if path.is_looped:
+            connection.append(station_nodes_dict[path.stations[0]])
+            connections.append(connection)
+        else:
+            # If path is not looped, the metro will visit following both direction. Therefore, we need to record both connection relation.
+            connection = []
+            reverse_path_stations = path.stations.copy().reverse()
+            for station in reverse_path_stations:
+                connection.append(station_nodes_dict[station]) 
+            connections.append(connection)
 
     while len(station_nodes) > 0:
         root = station_nodes[0]
@@ -29,8 +39,6 @@ def build_station_nodes_dict(stations: List[Station], paths: List[Path]):
             for idx in range(len(connection)):
                 node = connection[idx]
                 if node == root:
-                    if idx - 1 >= 0:
-                        root.neighbors.add(connection[idx - 1])
                     if idx + 1 <= len(connection) - 1:
                         root.neighbors.add(connection[idx + 1])
         station_nodes.remove(root)
