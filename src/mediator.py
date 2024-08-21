@@ -109,6 +109,8 @@ class Mediator:
         screen.blit(text_surface, score_display_coords)
 
     def assign_planned_paths(self, planned_paths):
+        for path in self.paths:
+            self.remove_path(path)
         for station_list in planned_paths:
             for id in range(0,len(station_list)):
                 position = station_list[id].position
@@ -354,6 +356,7 @@ class Mediator:
 
         self.find_travel_plan_for_passengers()
         self.move_passengers()
+        self.calculate_cost_following_paths()
 
     def move_passengers(self) -> None:
         for metro in self.metros:
@@ -499,15 +502,22 @@ class Mediator:
                 if should_set_null_path:
                     self.travel_plans[passenger] = TravelPlan([])
 
-    def calculate_cost_following_paths(self) -> None:
+    def calculate_cost_following_paths(self, print_data=False):
         station_nodes_dict = build_station_nodes_dict(self.stations, self.paths)
         stations_cost = 0
+        existed_types = []
+        # record the types, existed in the game.
         for station in self.stations:
-            print(station)
-            print(station.shape.type)
-            type_list = station_shape_type_list.copy()
+            existed_types.append(station.shape.type)
+        existed_types = list(set(existed_types))
+        for station in self.stations:
+            type_list = existed_types.copy()
             type_list.remove(station.shape.type)
-            print(type_list)
+            if print_data:
+                print(station)
+                print(station.shape.type)
+                print(type_list)
+            
             station_cost = 0
             for type in type_list:
                 possible_dst_stations = self.get_stations_for_shape_type(type)
@@ -525,16 +535,18 @@ class Mediator:
                     break
                 else:
                     station_cost += (len(shortest_node_path)-1)
-
-                print("destination type: ", type)
-                print("shortest node path: ", shortest_node_path)
-            print("station_cost: ", station_cost)
+                if print_data:
+                    print("destination type: ", type)
+                    print("shortest node path: ", shortest_node_path)
+            if print_data:
+                print("station_cost: ", station_cost)
+                print("=============")
             stations_cost += station_cost
-            print("=============")
-        print("stations_cost: ", stations_cost)
-        for path in self.paths:
-            print("path: ", path.stations)
-            
+        if print_data:
+            print("stations_cost: ", stations_cost)
+            for path in self.paths:
+                print("path: ", path.stations)
+        return stations_cost
 
 
         # station_nodes_dict = build_station_nodes_dict(self.stations, self.paths)

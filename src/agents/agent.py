@@ -1,4 +1,5 @@
 import math
+import copy
 class Agent():
     def __init__(self, mediator):
         self.mediator = mediator  # An instance of Mediator class

@@ -16,12 +16,17 @@ clock = pygame.time.Clock()
 
 mediator = Mediator()
 station_idx = [0,1,2,3]
+pre_cost = 2**63
 
 while True:
     dt_ms = clock.tick(framerate)
     mediator.increment_time(dt_ms)
     screen.fill(screen_color)
     mediator.render(screen)
+    cost = mediator.calculate_cost_following_paths(print_data=False)
+    if pre_cost != cost:
+        print("current_cost: ", cost)
+        pre_cost = cost
 
     # react to user interaction
     for pygame_event in pygame.event.get():
