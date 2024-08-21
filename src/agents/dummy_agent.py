@@ -3,10 +3,6 @@ from agents.agent import Agent
 
 class DummyAgent(Agent):
     def generate_paths(self, seed=None):
-        # old_state = random.getstate() 
-        # random.seed()
-        # result = random.randint(0, 100000)
-        # random.seed(result)
         # Assign each station to at least one path randomly
         self.planned_paths = [[] for _ in range(self.num_paths)] 
         for station in self.all_stations:
@@ -37,4 +33,4 @@ class DummyAgent(Agent):
             self.planned_paths[station_list_id] = self.order_stations(station_list)
             if whether_loop:
                 self.planned_paths[station_list_id].append(self.planned_paths[station_list_id][0])
-        # random.setstate(old_state)
+    

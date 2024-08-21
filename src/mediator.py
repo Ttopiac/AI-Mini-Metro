@@ -547,39 +547,3 @@ class Mediator:
             for path in self.paths:
                 print("path: ", path.stations)
         return stations_cost
-
-
-        # station_nodes_dict = build_station_nodes_dict(self.stations, self.paths)
-        # for station in self.stations:
-        #     for passenger in station.passengers:
-        #         possible_dst_stations = self.get_stations_for_shape_type(
-        #             passenger.destination_shape.type
-        #         )
-        #         # random.shuffle(possible_dst_stations)
-        #         should_set_null_path = True
-        #         shortest_node_path = []
-        #         for possible_dst_station in possible_dst_stations:
-        #             start = station_nodes_dict[station]
-        #             end = station_nodes_dict[possible_dst_station]
-        #             node_path = bfs(start, end)
-
-        #             if shortest_node_path == [] and len(node_path) > 0 :
-        #                 shortest_node_path = node_path
-        #             elif len(shortest_node_path) > len(node_path) and len(node_path) > 0 :
-        #                 shortest_node_path = node_path
-        #         if len(shortest_node_path) == 1:
-        #             # passenger arrived at destination
-        #             station.remove_passenger(passenger)
-        #             self.passengers.remove(passenger)
-        #             passenger.is_at_destination = True
-        #             del self.travel_plans[passenger]
-        #             should_set_null_path = False
-        #         elif len(shortest_node_path) > 1:
-        #             shortest_node_path = self.skip_stations_on_same_path(shortest_node_path)
-        #             self.travel_plans[passenger] = TravelPlan(shortest_node_path[1:])
-        #             self.find_next_path_for_passenger_at_station(
-        #                 passenger, station
-        #             )
-        #             should_set_null_path = False
-        #         if should_set_null_path:
-        #             self.travel_plans[passenger] = TravelPlan([])
