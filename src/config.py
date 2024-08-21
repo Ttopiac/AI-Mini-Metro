@@ -30,6 +30,7 @@ passenger_display_buffer = 3 * passenger_size
 
 # metro
 num_metros = 4
+
 metro_size = 30
 metro_color = (200, 200, 200)
 metro_capacity = 6
@@ -57,4 +58,4 @@ score_font_size = 50
 score_display_coords = (20, 20)
 
 # parameters control the randomizaiton
-seed = 627
+seed = 2

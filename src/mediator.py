@@ -18,6 +18,7 @@ from config import (
     score_display_coords,
     score_font_size,
     seed,
+    station_shape_type_list,
 )
 from entity.get_entity import get_random_stations
 from entity.metro import Metro
@@ -108,6 +109,8 @@ class Mediator:
         screen.blit(text_surface, score_display_coords)
 
     def assign_planned_paths(self, planned_paths):
+        for path in self.paths:
+            self.remove_path(path)
         for station_list in planned_paths:
             for id in range(0,len(station_list)):
                 position = station_list[id].position
@@ -353,6 +356,7 @@ class Mediator:
 
         self.find_travel_plan_for_passengers()
         self.move_passengers()
+        self.calculate_cost_following_paths()
 
     def move_passengers(self) -> None:
         for metro in self.metros:
@@ -476,6 +480,7 @@ class Mediator:
                     start = station_nodes_dict[station]
                     end = station_nodes_dict[possible_dst_station]
                     node_path = bfs(start, end)
+
                     if shortest_node_path == [] and len(node_path) > 0 :
                         shortest_node_path = node_path
                     elif len(shortest_node_path) > len(node_path) and len(node_path) > 0 :
@@ -496,3 +501,49 @@ class Mediator:
                     should_set_null_path = False
                 if should_set_null_path:
                     self.travel_plans[passenger] = TravelPlan([])
+
+    def calculate_cost_following_paths(self, print_data=False):
+        station_nodes_dict = build_station_nodes_dict(self.stations, self.paths)
+        stations_cost = 0
+        existed_types = []
+        # record the types, existed in the game.
+        for station in self.stations:
+            existed_types.append(station.shape.type)
+        existed_types = list(set(existed_types))
+        for station in self.stations:
+            type_list = existed_types.copy()
+            type_list.remove(station.shape.type)
+            if print_data:
+                print(station)
+                print(station.shape.type)
+                print(type_list)
+            
+            station_cost = 0
+            for type in type_list:
+                possible_dst_stations = self.get_stations_for_shape_type(type)
+                shortest_node_path = []
+                for possible_dst_station in possible_dst_stations:
+                    start = station_nodes_dict[station]
+                    end = station_nodes_dict[possible_dst_station]
+                    node_path = bfs(start, end)
+                    if shortest_node_path == [] and len(node_path) > 0 :
+                        shortest_node_path = node_path
+                    elif len(shortest_node_path) > len(node_path) and len(node_path) > 0 :
+                        shortest_node_path = node_path
+                if shortest_node_path == []:
+                    station_cost = float('inf')
+                    break
+                else:
+                    station_cost += (len(shortest_node_path)-1)
+                if print_data:
+                    print("destination type: ", type)
+                    print("shortest node path: ", shortest_node_path)
+            if print_data:
+                print("station_cost: ", station_cost)
+                print("=============")
+            stations_cost += station_cost
+        if print_data:
+            print("stations_cost: ", stations_cost)
+            for path in self.paths:
+                print("path: ", path.stations)
+        return stations_cost

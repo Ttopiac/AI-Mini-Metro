@@ -3,6 +3,7 @@ import pygame
 from config import framerate, screen_color, screen_height, screen_width
 from event.convert import convert_pygame_event
 from mediator import Mediator
+from agents.dummy_agent import DummyAgent
 
 # init
 pygame.init()
@@ -16,17 +17,20 @@ clock = pygame.time.Clock()
 
 mediator = Mediator()
 station_idx = [0,1,2,3]
-pre_cost = 2**63
+
+agent = DummyAgent(mediator)
+agent.generate_paths()
+whether_update = True
 
 while True:
     dt_ms = clock.tick(framerate)
     mediator.increment_time(dt_ms)
     screen.fill(screen_color)
     mediator.render(screen)
-    cost = mediator.calculate_cost_following_paths(print_data=False)
-    if pre_cost != cost:
-        print("current_cost: ", cost)
-        pre_cost = cost
+    if whether_update:
+        mediator.assign_planned_paths(agent.planned_paths)
+        mediator.calculate_cost_following_paths()
+        whether_update = False
 
     # react to user interaction
     for pygame_event in pygame.event.get():
